@@ -41,12 +41,12 @@ A modern NestJS application built with TypeScript, featuring PostgreSQL database
 
 4. **Generate Prisma client:**
    ```bash
-   yarn prisma:generate
+   yarn db:generate
    ```
 
 5. **Run database migrations:**
    ```bash
-   yarn prisma:migrate
+   yarn db:migrate
    ```
 
 6. **Verify everything works:**
@@ -67,8 +67,12 @@ yarn start:dev
 - **Health Check**: http://localhost:3000/api/v1/app/health
 
 ### **Database Management:**
-- **PgAdmin**: http://localhost:5050 (admin@example.com / admin123)
-- **Prisma Studio**: `yarn prisma:studio`
+- **PgAdmin**: http://localhost:5050 
+  - 🔐 **Login**: admin@example.com / admin123
+  - 🛡️ **Master Password**: pgAdminMaster2025! (required for server password retrieval)
+  - 🔗 **Pre-configured**: "NestJS Database" server automatically connected
+  - 📊 **Database**: `postgres` with `users` and `partners` tables
+- **Prisma Studio**: `yarn db:studio`
 
 ## 📁 Project Structure
 
@@ -167,9 +171,9 @@ src/
 - `yarn test:cov` - Run tests with coverage
 
 ### **Database:**
-- `yarn prisma:generate` - Generate Prisma client
-- `yarn prisma:migrate` - Create and apply migrations
-- `yarn prisma:studio` - Open Prisma Studio GUI
+- `yarn db:generate` - Generate Prisma client
+- `yarn db:migrate` - Create and apply migrations
+- `yarn db:studio` - Open Prisma Studio GUI
 - `yarn db:reset` - Reset database and apply migrations
 
 ### **Code Quality:**

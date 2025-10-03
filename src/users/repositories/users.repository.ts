@@ -66,7 +66,7 @@ export class UsersRepository {
   }
 
   async exists(id: number): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
       where: { id },
       select: { id: true },
     });
@@ -74,7 +74,7 @@ export class UsersRepository {
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
       where: { email },
       select: { id: true },
     });
@@ -82,7 +82,7 @@ export class UsersRepository {
   }
 
   async count(): Promise<number> {
-    return this.prisma.user.count({
+        return this.prisma.user.count({
       where: {
         isActive: true,
       },

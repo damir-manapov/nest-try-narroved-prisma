@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "NestJS Database",
+      "Group": "Servers",
+      "Host": "nest-postgres",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "nest_user",
+      "Password": "nest_password",
+      "SSLMode": "prefer",
+      "Comment": "Default PostgreSQL database for NestJS application"
+    }
+  }
+}

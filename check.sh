@@ -94,8 +94,8 @@ print_header "Database Check"
 if command -v docker &> /dev/null && docker ps | grep -q "nest-postgres"; then
     print_status "PostgreSQL container is running"
     
-    # Test database connection
-    if yarn prisma db pull --force &> /dev/null; then
+    # Test database connection (without pulling schema)
+    if docker exec nest-postgres psql -U nest_user -d postgres -c "SELECT 1;" &> /dev/null; then
         print_status "Database connection successful"
     else
         print_error "Cannot connect to database"
@@ -119,7 +119,7 @@ if yarn prisma migrate status &> /dev/null; then
     print_status "Database migrations up to date"
 else
     print_warning "Database migrations may be pending"
-    print_info "Run: yarn prisma:migrate"
+    print_info "Run: yarn db:migrate"
 fi
 
 # 6. TypeScript check
@@ -197,7 +197,7 @@ print_header "Available Scripts"
 print_info "Development:"
 echo "  yarn start:dev"
 echo "  yarn compose:up"
-echo "  yarn prisma:studio"
+echo "  yarn db:studio"
 
 print_info "Testing:"
 echo "  yarn test"
@@ -205,8 +205,8 @@ echo "  yarn test:e2e"
 echo "  yarn test:cov"
 
 print_info "Database:"
-echo "  yarn prisma:migrate"
-echo "  yarn prisma:generate"
+echo "  yarn db:migrate"
+echo "  yarn db:generate"
 echo "  yarn compose:down"
 
 print_info "Production:"
@@ -275,7 +275,7 @@ print_info "Version: $(grep '"version"' package.json | sed 's/.*"version": *"\([
 if command -v docker &> /dev/null && ! docker ps | grep -q "nest-postgres"; then
     print_info "\n🚀 To start the application:"
     echo "  1. yarn compose:up"
-    echo "  2. yarn prisma:migrate"
+    echo "  2. yarn db:migrate"
     echo "  3. yarn start:dev"
 else
     print_info "\n🎉 Project is ready to run!"
