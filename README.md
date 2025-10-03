@@ -73,10 +73,15 @@ yarn start:dev
   - 🔗 **Pre-configured**: "NestJS Database" server automatically connected
   - 📊 **Database**: `postgres` with `users` and `partners` tables
 - **Prisma Studio**: `yarn db:studio`
+- **Docker Compose**: All compose files are in `compose/` directory
 
 ## 📁 Project Structure
 
 ```
+compose/                        # Docker Compose configuration
+├── docker-compose.yml          # PostgreSQL and PgAdmin services
+└── pgadmin/                    # PgAdmin configuration
+    └── servers.json            # Pre-configured database connection
 src/
 ├── main.ts                    # Application entry point
 ├── app.module.ts              # Root application module
