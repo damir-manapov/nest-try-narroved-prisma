@@ -1,1 +1,1 @@
-# nest-try-narroved-prisma
+# NestJS TypeScript Project with Narroved Prisma
