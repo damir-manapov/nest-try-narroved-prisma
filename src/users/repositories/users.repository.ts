@@ -47,7 +47,9 @@ export class UsersRepository {
       data: {
         ...(updateUserDto.email && { email: updateUserDto.email }),
         ...(updateUserDto.name && { name: updateUserDto.name }),
-        ...(updateUserDto.isActive !== undefined && { isActive: updateUserDto.isActive }),
+        ...(updateUserDto.isActive !== undefined && {
+          isActive: updateUserDto.isActive,
+        }),
       },
     });
   }

@@ -28,7 +28,9 @@ export class PrismaUserService implements OnModuleInit, OnModuleDestroy {
   }
 
   // Transaction with restricted interface - only User operations allowed
-  async $transaction<R>(fn: (prisma: UserPrismaClient) => Promise<R>): Promise<R> {
+  async $transaction<R>(
+    fn: (prisma: UserPrismaClient) => Promise<R>,
+  ): Promise<R> {
     return this.prisma.$transaction((prisma) => {
       // Create a proxy that only exposes the user entity
       const userOnlyClient = {

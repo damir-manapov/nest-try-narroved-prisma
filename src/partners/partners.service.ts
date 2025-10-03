@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { Partner } from '@prisma/client';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
@@ -10,7 +14,9 @@ export class PartnersService {
 
   async create(createPartnerDto: CreatePartnerDto): Promise<Partner> {
     // Check if email already exists
-    const existingPartner = await this.partnersRepository.findByEmail(createPartnerDto.email);
+    const existingPartner = await this.partnersRepository.findByEmail(
+      createPartnerDto.email,
+    );
     if (existingPartner) {
       throw new ConflictException('Partner with this email already exists');
     }
@@ -32,7 +38,10 @@ export class PartnersService {
     return partner;
   }
 
-  async update(id: number, updatePartnerDto: UpdatePartnerDto): Promise<Partner> {
+  async update(
+    id: number,
+    updatePartnerDto: UpdatePartnerDto,
+  ): Promise<Partner> {
     // Check if partner exists
     const existingPartner = await this.partnersRepository.findById(id);
     if (!existingPartner) {
@@ -40,8 +49,13 @@ export class PartnersService {
     }
 
     // Check if email is being updated and already exists
-    if (updatePartnerDto.email && updatePartnerDto.email !== existingPartner.email) {
-      const emailExists = await this.partnersRepository.existsByEmail(updatePartnerDto.email);
+    if (
+      updatePartnerDto.email &&
+      updatePartnerDto.email !== existingPartner.email
+    ) {
+      const emailExists = await this.partnersRepository.existsByEmail(
+        updatePartnerDto.email,
+      );
       if (emailExists) {
         throw new ConflictException('Partner with this email already exists');
       }

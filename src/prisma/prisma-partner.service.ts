@@ -28,7 +28,9 @@ export class PrismaPartnerService implements OnModuleInit, OnModuleDestroy {
   }
 
   // Transaction with restricted interface - only Partner operations allowed
-  async $transaction<R>(fn: (prisma: PartnerPrismaClient) => Promise<R>): Promise<R> {
+  async $transaction<R>(
+    fn: (prisma: PartnerPrismaClient) => Promise<R>,
+  ): Promise<R> {
     return this.prisma.$transaction((prisma) => {
       // Create a proxy that only exposes the partner entity
       const partnerOnlyClient = {

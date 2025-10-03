@@ -41,7 +41,10 @@ export class UsersController {
 
   @Get('stats')
   @ApiOperation({ summary: 'Get user statistics' })
-  @ApiResponse({ status: 200, description: 'User statistics retrieved successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'User statistics retrieved successfully.',
+  })
   async getUserStats() {
     return this.usersService.getUserStats();
   }
@@ -81,7 +84,11 @@ export class UsersController {
   @ApiOperation({ summary: 'Get a user by email' })
   @ApiResponse({ status: 200, description: 'User found.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  @ApiParam({ name: 'email', type: 'string', description: 'User email address' })
+  @ApiParam({
+    name: 'email',
+    type: 'string',
+    description: 'User email address',
+  })
   async findByEmail(@Param('email') email: string) {
     return this.usersService.findByEmail(email);
   }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,7 +14,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     // Check if email already exists
-    const existingUser = await this.usersRepository.findByEmail(createUserDto.email);
+    const existingUser = await this.usersRepository.findByEmail(
+      createUserDto.email,
+    );
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
@@ -41,7 +47,9 @@ export class UsersService {
 
     // Check if email is being updated and already exists
     if (updateUserDto.email && updateUserDto.email !== existingUser.email) {
-      const emailExists = await this.usersRepository.existsByEmail(updateUserDto.email);
+      const emailExists = await this.usersRepository.existsByEmail(
+        updateUserDto.email,
+      );
       if (emailExists) {
         throw new ConflictException('User with this email already exists');
       }

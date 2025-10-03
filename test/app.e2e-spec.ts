@@ -71,9 +71,7 @@ describe('AppController (e2e)', () => {
 
   describe('/api (GET)', () => {
     it('should serve Swagger documentation', () => {
-      return request(app.getHttpServer())
-        .get('/api')
-        .expect(200);
+      return request(app.getHttpServer()).get('/api').expect(200);
     });
   });
 

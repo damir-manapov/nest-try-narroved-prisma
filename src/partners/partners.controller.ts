@@ -41,7 +41,10 @@ export class PartnersController {
 
   @Get('stats')
   @ApiOperation({ summary: 'Get partner statistics' })
-  @ApiResponse({ status: 200, description: 'Partner statistics retrieved successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Partner statistics retrieved successfully.',
+  })
   async getPartnerStats() {
     return this.partnersService.getPartnerStats();
   }
@@ -81,7 +84,11 @@ export class PartnersController {
   @ApiOperation({ summary: 'Get a partner by email' })
   @ApiResponse({ status: 200, description: 'Partner found.' })
   @ApiResponse({ status: 404, description: 'Partner not found.' })
-  @ApiParam({ name: 'email', type: 'string', description: 'Partner email address' })
+  @ApiParam({
+    name: 'email',
+    type: 'string',
+    description: 'Partner email address',
+  })
   async findByEmail(@Param('email') email: string) {
     return this.partnersService.findByEmail(email);
   }

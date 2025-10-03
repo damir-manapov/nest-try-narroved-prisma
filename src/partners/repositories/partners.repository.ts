@@ -44,16 +44,27 @@ export class PartnersRepository {
     });
   }
 
-  async update(id: number, updatePartnerDto: UpdatePartnerDto): Promise<Partner> {
+  async update(
+    id: number,
+    updatePartnerDto: UpdatePartnerDto,
+  ): Promise<Partner> {
     return this.prisma.partners.update({
       where: { id },
       data: {
         ...(updatePartnerDto.name && { name: updatePartnerDto.name }),
         ...(updatePartnerDto.email && { email: updatePartnerDto.email }),
-        ...(updatePartnerDto.phone !== undefined && { phone: updatePartnerDto.phone }),
-        ...(updatePartnerDto.website !== undefined && { website: updatePartnerDto.website }),
-        ...(updatePartnerDto.address !== undefined && { address: updatePartnerDto.address }),
-        ...(updatePartnerDto.isActive !== undefined && { isActive: updatePartnerDto.isActive }),
+        ...(updatePartnerDto.phone !== undefined && {
+          phone: updatePartnerDto.phone,
+        }),
+        ...(updatePartnerDto.website !== undefined && {
+          website: updatePartnerDto.website,
+        }),
+        ...(updatePartnerDto.address !== undefined && {
+          address: updatePartnerDto.address,
+        }),
+        ...(updatePartnerDto.isActive !== undefined && {
+          isActive: updatePartnerDto.isActive,
+        }),
       },
     });
   }
