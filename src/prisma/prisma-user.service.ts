@@ -23,7 +23,7 @@ export class PrismaUserService implements OnModuleInit, OnModuleDestroy {
   }
 
   // Only expose User-related operations
-  get users() {
+  get user() {
     return this.prisma.user;
   }
 

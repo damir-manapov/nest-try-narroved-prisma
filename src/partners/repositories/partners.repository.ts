@@ -9,7 +9,7 @@ export class PartnersRepository {
   constructor(private prisma: PrismaPartnerService) {}
 
   async create(createPartnerDto: CreatePartnerDto): Promise<Partner> {
-    return this.prisma.partners.create({
+    return this.prisma.partner.create({
       data: {
         name: createPartnerDto.name,
         email: createPartnerDto.email,
@@ -22,7 +22,7 @@ export class PartnersRepository {
   }
 
   async findAll(): Promise<Partner[]> {
-    return this.prisma.partners.findMany({
+    return this.prisma.partner.findMany({
       where: {
         isActive: true,
       },
@@ -33,57 +33,48 @@ export class PartnersRepository {
   }
 
   async findById(id: number): Promise<Partner | null> {
-    return this.prisma.partners.findUnique({
+    return this.prisma.partner.findUnique({
       where: { id },
     });
   }
 
   async findByEmail(email: string): Promise<Partner | null> {
-    return this.prisma.partners.findUnique({
+    return this.prisma.partner.findUnique({
       where: { email },
     });
   }
 
-  async update(
-    id: number,
-    updatePartnerDto: UpdatePartnerDto,
-  ): Promise<Partner> {
-    return this.prisma.partners.update({
+  async update(id: number, updatePartnerDto: UpdatePartnerDto): Promise<Partner> {
+    return this.prisma.partner.update({
       where: { id },
       data: {
         ...(updatePartnerDto.name && { name: updatePartnerDto.name }),
         ...(updatePartnerDto.email && { email: updatePartnerDto.email }),
-        ...(updatePartnerDto.phone !== undefined && {
-          phone: updatePartnerDto.phone,
-        }),
-        ...(updatePartnerDto.website !== undefined && {
-          website: updatePartnerDto.website,
-        }),
-        ...(updatePartnerDto.address !== undefined && {
-          address: updatePartnerDto.address,
-        }),
-        ...(updatePartnerDto.isActive !== undefined && {
-          isActive: updatePartnerDto.isActive,
-        }),
+        ...(updatePartnerDto.phone !== undefined && { phone: updatePartnerDto.phone }),
+        ...(updatePartnerDto.website !== undefined && { website: updatePartnerDto.website }),
+        ...(updatePartnerDto.address !== undefined && { address: updatePartnerDto.address }),
+
+        ...(updatePartnerDto.isActive !== undefined && { isActive: updatePartnerDto.isActive }),
+
       },
     });
   }
 
   async softDelete(id: number): Promise<Partner> {
-    return this.prisma.partners.update({
+    return this.prisma.partner.update({
       where: { id },
       data: { isActive: false },
     });
   }
 
   async hardDelete(id: number): Promise<Partner> {
-    return this.prisma.partners.delete({
+    return this.prisma.partner.delete({
       where: { id },
     });
   }
 
   async exists(id: number): Promise<boolean> {
-    const partner = await this.prisma.partners.findUnique({
+    const partner = await this.prisma.partner.findUnique({
       where: { id },
       select: { id: true },
     });
@@ -91,7 +82,7 @@ export class PartnersRepository {
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    const partner = await this.prisma.partners.findUnique({
+    const partner = await this.prisma.partner.findUnique({
       where: { email },
       select: { id: true },
     });
@@ -99,7 +90,7 @@ export class PartnersRepository {
   }
 
   async count(): Promise<number> {
-    return this.prisma.partners.count({
+    return this.prisma.partner.count({
       where: {
         isActive: true,
       },

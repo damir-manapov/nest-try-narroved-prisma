@@ -23,7 +23,7 @@ export class PrismaPartnerService implements OnModuleInit, OnModuleDestroy {
   }
 
   // Only expose Partner-related operations
-  get partners() {
+  get partner() {
     return this.prisma.partner;
   }
 

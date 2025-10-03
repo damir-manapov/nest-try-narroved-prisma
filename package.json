@@ -24,7 +24,9 @@
     "prisma:studio": "prisma studio",
     "compose:up": "docker compose up -d",
     "compose:down": "docker compose down",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "check": "./check.sh",
+    "health": "./check.sh"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

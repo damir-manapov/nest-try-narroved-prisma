@@ -9,7 +9,7 @@ export class UsersRepository {
   constructor(private prisma: PrismaUserService) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    return this.prisma.users.create({
+    return this.prisma.user.create({
       data: {
         email: createUserDto.email,
         name: createUserDto.name,
@@ -19,7 +19,7 @@ export class UsersRepository {
   }
 
   async findAll(): Promise<User[]> {
-    return this.prisma.users.findMany({
+    return this.prisma.user.findMany({
       where: {
         isActive: true,
       },
@@ -30,45 +30,43 @@ export class UsersRepository {
   }
 
   async findById(id: number): Promise<User | null> {
-    return this.prisma.users.findUnique({
+    return this.prisma.user.findUnique({
       where: { id },
     });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.users.findUnique({
+    return this.prisma.user.findUnique({
       where: { email },
     });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    return this.prisma.users.update({
+    return this.prisma.user.update({
       where: { id },
       data: {
         ...(updateUserDto.email && { email: updateUserDto.email }),
         ...(updateUserDto.name && { name: updateUserDto.name }),
-        ...(updateUserDto.isActive !== undefined && {
-          isActive: updateUserDto.isActive,
-        }),
+        ...(updateUserDto.isActive !== undefined && { isActive: updateUserDto.isActive }),
       },
     });
   }
 
   async softDelete(id: number): Promise<User> {
-    return this.prisma.users.update({
+    return this.prisma.user.update({
       where: { id },
       data: { isActive: false },
     });
   }
 
   async hardDelete(id: number): Promise<User> {
-    return this.prisma.users.delete({
+    return this.prisma.user.delete({
       where: { id },
     });
   }
 
   async exists(id: number): Promise<boolean> {
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
       select: { id: true },
     });
@@ -76,7 +74,7 @@ export class UsersRepository {
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email },
       select: { id: true },
     });
@@ -84,7 +82,7 @@ export class UsersRepository {
   }
 
   async count(): Promise<number> {
-    return this.prisma.users.count({
+    return this.prisma.user.count({
       where: {
         isActive: true,
       },
