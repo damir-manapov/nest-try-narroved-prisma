@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Partner } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaPartnerService } from '../../prisma/prisma-partner.service';
 import { CreatePartnerDto } from '../dto/create-partner.dto';
 import { UpdatePartnerDto } from '../dto/update-partner.dto';
 
 @Injectable()
 export class PartnersRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaPartnerService) {}
 
   async create(createPartnerDto: CreatePartnerDto): Promise<Partner> {
-    return this.prisma.partner.create({
+    return this.prisma.partners.create({
       data: {
         name: createPartnerDto.name,
         email: createPartnerDto.email,
@@ -22,7 +22,7 @@ export class PartnersRepository {
   }
 
   async findAll(): Promise<Partner[]> {
-    return this.prisma.partner.findMany({
+    return this.prisma.partners.findMany({
       where: {
         isActive: true,
       },
@@ -33,19 +33,19 @@ export class PartnersRepository {
   }
 
   async findById(id: number): Promise<Partner | null> {
-    return this.prisma.partner.findUnique({
+    return this.prisma.partners.findUnique({
       where: { id },
     });
   }
 
   async findByEmail(email: string): Promise<Partner | null> {
-    return this.prisma.partner.findUnique({
+    return this.prisma.partners.findUnique({
       where: { email },
     });
   }
 
   async update(id: number, updatePartnerDto: UpdatePartnerDto): Promise<Partner> {
-    return this.prisma.partner.update({
+    return this.prisma.partners.update({
       where: { id },
       data: {
         ...(updatePartnerDto.name && { name: updatePartnerDto.name }),
@@ -59,20 +59,20 @@ export class PartnersRepository {
   }
 
   async softDelete(id: number): Promise<Partner> {
-    return this.prisma.partner.update({
+    return this.prisma.partners.update({
       where: { id },
       data: { isActive: false },
     });
   }
 
   async hardDelete(id: number): Promise<Partner> {
-    return this.prisma.partner.delete({
+    return this.prisma.partners.delete({
       where: { id },
     });
   }
 
   async exists(id: number): Promise<boolean> {
-    const partner = await this.prisma.partner.findUnique({
+    const partner = await this.prisma.partners.findUnique({
       where: { id },
       select: { id: true },
     });
@@ -80,7 +80,7 @@ export class PartnersRepository {
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    const partner = await this.prisma.partner.findUnique({
+    const partner = await this.prisma.partners.findUnique({
       where: { email },
       select: { id: true },
     });
@@ -88,7 +88,7 @@ export class PartnersRepository {
   }
 
   async count(): Promise<number> {
-    return this.prisma.partner.count({
+    return this.prisma.partners.count({
       where: {
         isActive: true,
       },
