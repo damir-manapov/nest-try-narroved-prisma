@@ -1,28 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { Partner } from '@prisma/client';
 import { PrismaPartnerService } from '../../prisma/prisma-partner.service';
-import { CreatePartnerDto } from '../dto/create-partner.dto';
-import { UpdatePartnerDto } from '../dto/update-partner.dto';
+import { Partner, CreatePartnerData, UpdatePartnerData } from '../models/partner.model';
+import { PartnerMapper } from './partner.mapper';
 
 @Injectable()
 export class PartnersRepository {
   constructor(private prisma: PrismaPartnerService) {}
 
-  async create(createPartnerDto: CreatePartnerDto): Promise<Partner> {
-    return this.prisma.partner.create({
-      data: {
-        name: createPartnerDto.name,
-        email: createPartnerDto.email,
-        phone: createPartnerDto.phone,
-        website: createPartnerDto.website,
-        address: createPartnerDto.address,
-        isActive: createPartnerDto.isActive ?? true,
-      },
+  async create(createPartnerData: CreatePartnerData): Promise<Partner> {
+    const prismaData = PartnerMapper.toPrismaCreateData(createPartnerData);
+    const prismaPartner = await this.prisma.partner.create({
+      data: prismaData,
     });
+    return PartnerMapper.toDomain(prismaPartner);
   }
 
   async findAll(): Promise<Partner[]> {
-    return this.prisma.partner.findMany({
+    const prismaPartners = await this.prisma.partner.findMany({
       where: {
         isActive: true,
       },
@@ -30,47 +24,45 @@ export class PartnersRepository {
         createdAt: 'desc',
       },
     });
+    return prismaPartners.map(PartnerMapper.toDomain);
   }
 
   async findById(id: number): Promise<Partner | null> {
-    return this.prisma.partner.findUnique({
+    const prismaPartner = await this.prisma.partner.findUnique({
       where: { id },
     });
+    return prismaPartner ? PartnerMapper.toDomain(prismaPartner) : null;
   }
 
   async findByEmail(email: string): Promise<Partner | null> {
-    return this.prisma.partner.findUnique({
+    const prismaPartner = await this.prisma.partner.findUnique({
       where: { email },
     });
+    return prismaPartner ? PartnerMapper.toDomain(prismaPartner) : null;
   }
 
-  async update(id: number, updatePartnerDto: UpdatePartnerDto): Promise<Partner> {
-    return this.prisma.partner.update({
+  async update(id: number, updatePartnerData: UpdatePartnerData): Promise<Partner> {
+    const prismaData = PartnerMapper.toPrismaUpdateData(updatePartnerData);
+    const prismaPartner = await this.prisma.partner.update({
       where: { id },
-      data: {
-        ...(updatePartnerDto.name && { name: updatePartnerDto.name }),
-        ...(updatePartnerDto.email && { email: updatePartnerDto.email }),
-        ...(updatePartnerDto.phone !== undefined && { phone: updatePartnerDto.phone }),
-        ...(updatePartnerDto.website !== undefined && { website: updatePartnerDto.website }),
-        ...(updatePartnerDto.address !== undefined && { address: updatePartnerDto.address }),
-
-        ...(updatePartnerDto.isActive !== undefined && { isActive: updatePartnerDto.isActive }),
-
-      },
+      data: prismaData,
     });
+    return PartnerMapper.toDomain(prismaPartner);
   }
 
   async softDelete(id: number): Promise<Partner> {
-    return this.prisma.partner.update({
+    const prismaPartner = await this.prisma.partner.update({
       where: { id },
       data: { isActive: false },
     });
+    return PartnerMapper.toDomain(prismaPartner);
   }
 
   async hardDelete(id: number): Promise<Partner> {
-    return this.prisma.partner.delete({
+    const prismaPartner = await this.prisma.partner.delete({
       where: { id },
     });
+    return PartnerMapper.toDomain(prismaPartner);
   }
 
   async exists(id: number): Promise<boolean> {

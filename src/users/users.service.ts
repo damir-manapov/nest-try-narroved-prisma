@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User, CreateUserData, UpdateUserData } from './models/user.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './repositories/users.repository';
@@ -21,7 +21,14 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    return this.usersRepository.create(createUserDto);
+    // Convert DTO to domain model
+    const createUserData: CreateUserData = {
+      email: createUserDto.email,
+      name: createUserDto.name,
+      isActive: createUserDto.isActive,
+    };
+
+    return this.usersRepository.create(createUserData);
   }
 
   async findAll(): Promise<User[]> {
@@ -55,7 +62,14 @@ export class UsersService {
       }
     }
 
-    return this.usersRepository.update(id, updateUserDto);
+    // Convert DTO to domain model
+    const updateUserData: UpdateUserData = {
+      email: updateUserDto.email,
+      name: updateUserDto.name,
+      isActive: updateUserDto.isActive,
+    };
+
+    return this.usersRepository.update(id, updateUserData);
   }
 
   async remove(id: number): Promise<User> {

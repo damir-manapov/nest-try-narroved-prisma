@@ -1,25 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { PrismaUserService } from '../../prisma/prisma-user.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { User, CreateUserData, UpdateUserData } from '../models/user.model';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UsersRepository {
   constructor(private prisma: PrismaUserService) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    return this.prisma.user.create({
-      data: {
-        email: createUserDto.email,
-        name: createUserDto.name,
-        isActive: createUserDto.isActive ?? true,
-      },
+  async create(createUserData: CreateUserData): Promise<User> {
+    const prismaData = UserMapper.toPrismaCreateData(createUserData);
+    const prismaUser = await this.prisma.user.create({
+      data: prismaData,
     });
+    return UserMapper.toDomain(prismaUser);
   }
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({
+    const prismaUsers = await this.prisma.user.findMany({
       where: {
         isActive: true,
       },
@@ -27,42 +24,45 @@ export class UsersRepository {
         createdAt: 'desc',
       },
     });
+    return prismaUsers.map(UserMapper.toDomain);
   }
 
   async findById(id: number): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    const prismaUser = await this.prisma.user.findUnique({
       where: { id },
     });
+    return prismaUser ? UserMapper.toDomain(prismaUser) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    const prismaUser = await this.prisma.user.findUnique({
       where: { email },
     });
+    return prismaUser ? UserMapper.toDomain(prismaUser) : null;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    return this.prisma.user.update({
+  async update(id: number, updateUserData: UpdateUserData): Promise<User> {
+    const prismaData = UserMapper.toPrismaUpdateData(updateUserData);
+    const prismaUser = await this.prisma.user.update({
       where: { id },
-      data: {
-        ...(updateUserDto.email && { email: updateUserDto.email }),
-        ...(updateUserDto.name && { name: updateUserDto.name }),
-        ...(updateUserDto.isActive !== undefined && { isActive: updateUserDto.isActive }),
-      },
+      data: prismaData,
     });
+    return UserMapper.toDomain(prismaUser);
   }
 
   async softDelete(id: number): Promise<User> {
-    return this.prisma.user.update({
+    const prismaUser = await this.prisma.user.update({
       where: { id },
       data: { isActive: false },
     });
+    return UserMapper.toDomain(prismaUser);
   }
 
   async hardDelete(id: number): Promise<User> {
-    return this.prisma.user.delete({
+    const prismaUser = await this.prisma.user.delete({
       where: { id },
     });
+    return UserMapper.toDomain(prismaUser);
   }
 
   async exists(id: number): Promise<boolean> {

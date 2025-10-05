@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { Partner } from '@prisma/client';
+import { Partner, CreatePartnerData, UpdatePartnerData } from './models/partner.model';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
 import { PartnersRepository } from './repositories/partners.repository';
@@ -21,7 +21,17 @@ export class PartnersService {
       throw new ConflictException('Partner with this email already exists');
     }
 
-    return this.partnersRepository.create(createPartnerDto);
+    // Convert DTO to domain model
+    const createPartnerData: CreatePartnerData = {
+      name: createPartnerDto.name,
+      email: createPartnerDto.email,
+      phone: createPartnerDto.phone,
+      website: createPartnerDto.website,
+      address: createPartnerDto.address,
+      isActive: createPartnerDto.isActive,
+    };
+
+    return this.partnersRepository.create(createPartnerData);
   }
 
   async findAll(): Promise<Partner[]> {
@@ -61,7 +71,17 @@ export class PartnersService {
       }
     }
 
-    return this.partnersRepository.update(id, updatePartnerDto);
+    // Convert DTO to domain model
+    const updatePartnerData: UpdatePartnerData = {
+      name: updatePartnerDto.name,
+      email: updatePartnerDto.email,
+      phone: updatePartnerDto.phone,
+      website: updatePartnerDto.website,
+      address: updatePartnerDto.address,
+      isActive: updatePartnerDto.isActive,
+    };
+
+    return this.partnersRepository.update(id, updatePartnerData);
   }
 
   async remove(id: number): Promise<Partner> {
