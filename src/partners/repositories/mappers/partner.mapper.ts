@@ -1,5 +1,5 @@
 import { Partner as PrismaPartner, Prisma } from '@prisma/client';
-import { Partner, CreatePartnerData, UpdatePartnerData } from '../models/partner.model';
+import { Partner, CreatePartnerData, UpdatePartnerData } from '../../models/partner.model';
 
 export class PartnerMapper {
   static toDomain(prismaPartner: PrismaPartner): Partner {

@@ -1,5 +1,5 @@
 import { User as PrismaUser, Prisma } from '@prisma/client';
-import { User, CreateUserData, UpdateUserData } from '../models/user.model';
+import { User, CreateUserData, UpdateUserData } from '../../models/user.model';
 
 export class UserMapper {
   static toDomain(prismaUser: PrismaUser): User {

@@ -1,5 +1,5 @@
 import { Contract as PrismaContract, Prisma } from '@prisma/client';
-import { Contract, CreateContractData, UpdateContractData } from '../models/contract.model';
+import { Contract, CreateContractData, UpdateContractData } from '../../models/contract.model';
 
 export class ContractMapper {
   static toDomain(prismaContract: PrismaContract): Contract {

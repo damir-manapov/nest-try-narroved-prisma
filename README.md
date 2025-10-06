@@ -100,8 +100,9 @@ src/
 │   ├── repositories/         # Data access layer
 │   │   ├── users.repository.ts
 │   │   ├── user-settings.repository.ts
-│   │   ├── user.mapper.ts
-│   │   └── user-settings.mapper.ts
+│   │   └── mappers/          # Data transformation mappers
+│   │       ├── user.mapper.ts
+│   │       └── user-settings.mapper.ts
 │   ├── models/               # Domain models
 │   │   ├── user.model.ts
 │   │   └── user-settings.model.ts
@@ -125,8 +126,9 @@ src/
 │   ├── repositories/         # Data access layer
 │   │   ├── partners.repository.ts
 │   │   ├── contract.repository.ts
-│   │   ├── partner.mapper.ts
-│   │   └── contract.mapper.ts
+│   │   └── mappers/          # Data transformation mappers
+│   │       ├── partner.mapper.ts
+│   │       └── contract.mapper.ts
 │   ├── models/               # Domain models
 │   │   ├── partner.model.ts
 │   │   └── contract.model.ts
@@ -296,14 +298,19 @@ src/
 │           Controllers               │ ← REST API Layer
 ├─────────────────────────────────────┤
 │            Services                 │ ← Business Logic Layer
+│            └── mappers/            │ ← Service-specific transformations
 ├─────────────────────────────────────┤
 │          Repositories               │ ← Data Access Layer
-├─────────────────────────────────────┤
-│           Mappers                  │ ← Data Transformation Layer
+│          └── mappers/              │ ← Data transformation mappers
 ├─────────────────────────────────────┤
 │        External Services            │ ← Database Access Layer
 └─────────────────────────────────────┘
 ```
+
+### **Mapper Organization:**
+- **Repository Mappers**: Handle conversion between Prisma entities and domain models
+- **Service Mappers**: Handle business logic transformations (DTOs to domain models, etc.)
+- **Separation of Concerns**: Each layer has its own mappers for specific responsibilities
 
 ## 🧪 Testing
 

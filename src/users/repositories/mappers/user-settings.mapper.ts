@@ -1,5 +1,5 @@
 import { UserSettings as PrismaUserSettings, Prisma } from '@prisma/client';
-import { UserSettings, CreateUserSettingsData, UpdateUserSettingsData } from '../models/user-settings.model';
+import { UserSettings, CreateUserSettingsData, UpdateUserSettingsData } from '../../models/user-settings.model';
 
 export class UserSettingsMapper {
   static toDomain(prismaUserSettings: PrismaUserSettings): UserSettings {
