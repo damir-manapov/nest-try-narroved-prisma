@@ -73,8 +73,12 @@ if [ ! -d "node_modules" ]; then
     yarn install
 fi
 
-if [ ! -d ".yarn/install-state.gz" ] && [ ! -d "node_modules/.yarn" ]; then
-    print_warning "Dependencies may be outdated"
+if [ ! -f "yarn.lock" ]; then
+    print_warning "yarn.lock not found. Dependencies may be outdated"
+    print_info "Run: yarn install"
+elif [ ! -d "node_modules" ] || [ ! "$(ls -A node_modules 2>/dev/null)" ]; then
+    print_warning "node_modules is empty or missing. Dependencies may be outdated"
+    print_info "Run: yarn install"
 else
     print_status "Dependencies installed"
 fi
