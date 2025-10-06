@@ -96,7 +96,10 @@ src/
 │   │   └── user-settings.controller.ts
 │   ├── services/             # Business logic layer
 │   │   ├── users.service.ts
-│   │   └── user-settings.service.ts
+│   │   ├── user-settings.service.ts
+│   │   └── mappers/          # Service-specific transformations
+│   │       ├── user-service.mapper.ts
+│   │       └── user-settings-service.mapper.ts
 │   ├── repositories/         # Data access layer
 │   │   ├── users.repository.ts
 │   │   ├── user-settings.repository.ts
@@ -122,7 +125,10 @@ src/
 │   │   └── contract.controller.ts
 │   ├── services/             # Business logic layer
 │   │   ├── partners.service.ts
-│   │   └── contract.service.ts
+│   │   ├── contract.service.ts
+│   │   └── mappers/          # Service-specific transformations
+│   │       ├── partner-service.mapper.ts
+│   │       └── contract-service.mapper.ts
 │   ├── repositories/         # Data access layer
 │   │   ├── partners.repository.ts
 │   │   ├── contract.repository.ts
@@ -308,9 +314,18 @@ src/
 ```
 
 ### **Mapper Organization:**
-- **Repository Mappers**: Handle conversion between Prisma entities and domain models
-- **Service Mappers**: Handle business logic transformations (DTOs to domain models, etc.)
+- **Repository Mappers** (`repositories/mappers/`): Handle conversion between Prisma entities and domain models
+  - `user.mapper.ts` - User entity ↔ User domain model
+  - `user-settings.mapper.ts` - UserSettings entity ↔ UserSettings domain model
+  - `partner.mapper.ts` - Partner entity ↔ Partner domain model
+  - `contract.mapper.ts` - Contract entity ↔ Contract domain model
+- **Service Mappers** (`services/mappers/`): Handle business logic transformations (DTOs to domain models)
+  - `user-service.mapper.ts` - CreateUserDto/UpdateUserDto → CreateUserData/UpdateUserData
+  - `user-settings-service.mapper.ts` - CreateUserSettingsDto/UpdateUserSettingsDto → CreateUserSettingsData/UpdateUserSettingsData
+  - `partner-service.mapper.ts` - CreatePartnerDto/UpdatePartnerDto → CreatePartnerData/UpdatePartnerData
+  - `contract-service.mapper.ts` - CreateContractDto/UpdateContractDto → CreateContractData/UpdateContractData
 - **Separation of Concerns**: Each layer has its own mappers for specific responsibilities
+- **Type Safety**: All mappers use explicit Prisma types for database operations
 
 ## 🧪 Testing
 
@@ -396,16 +411,24 @@ This validates:
 - Prisma-generated types for database operations
 - Domain model interfaces for business logic
 - Compile-time error prevention
+- Service mappers with explicit return types
+- Repository mappers with Prisma type safety
 
 ### **Maintainability:**
 - Clear separation of concerns
 - Domain-driven design principles
 - Module-based organization
+- Service mappers for business logic transformations
+- Repository mappers for data access transformations
+- Centralized transformation logic
 - Consistent naming conventions
 
 ### **Testability:**
 - Dependency injection for easy mocking
 - Repository pattern for data layer testing
+- Service mappers can be unit tested independently
+- Repository mappers can be tested with mock Prisma data
+- Clear interfaces for mocking dependencies
 - Service layer isolation
 - Clear interfaces for unit testing
 
