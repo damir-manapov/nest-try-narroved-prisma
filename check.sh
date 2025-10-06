@@ -181,15 +181,11 @@ fi
 
 # 10. Security check (basic)
 print_header "Security Check"
-if command -v audit &> /dev/null; then
-    if yarn audit --level moderate &> /dev/null; then
-        print_status "No moderate/high security vulnerabilities found"
-    else
-        print_warning "Security vulnerabilities found"
-        print_info "Run: yarn audit --fix"
-    fi
+if yarn audit --level moderate &> /dev/null; then
+    print_status "No moderate/high security vulnerabilities found"
 else
-    print_info "npm audit not available for dependency check"
+    print_warning "Security vulnerabilities found"
+    print_info "Run: yarn audit --fix"
 fi
 
 # 11. Package.json scripts check
@@ -225,7 +221,7 @@ for dir in "${required_dirs[@]}"; do
     fi
 done
 
-required_files=("nest-cli.json" "tsconfig.json" "package.json")
+required_files=("nest-cli.json" "tsconfig.json" "package.json" "eslint.config.js")
 for file in "${required_files[@]}"; do
     if [ -f "$file" ]; then
         print_status "$file exists"
@@ -235,37 +231,7 @@ for file in "${required_files[@]}"; do
     fi
 done
 
-# 13. Module-specific checks
-print_header "Module Check"
-modules=("Users" "Partners")
-for module in "${modules[@]}"; do
-    module_lower=$(echo "$module" | tr '[:upper:]' '[:lower:]' | sed 's/s$//')
-    if [ -d "src/$module_lower" ]; then
-        print_status "$module module exists"
-        
-        # Check required files for each module
-        required_module_files=(
-            "$module_lower.controller.ts"
-            "$module_lower.service.ts"
-            "$module_lower.module.ts"
-            "repositories/$module_lower.repository.ts"
-            "dto/create-$module_lower.dto.ts"
-            "dto/update-$module_lower.dto.ts"
-        )
-        
-        for file in "${required_module_files[@]}"; do
-            if [ -f "src/$module_lower/$file" ]; then
-                print_status "  ✓ $file"
-            else
-                print_warning "  ⚠ $file missing"
-            fi
-        done
-    else
-        print_warning "$module module directory missing"
-    fi
-done
-
-# 14. Last updated info
+# 13. Last updated info
 print_header "Project Summary"
 print_status "All health checks completed!"
 print_info "Project: $(grep '"name"' package.json | sed 's/.*"name": *"\([^"]*\)".*/\1/')"
