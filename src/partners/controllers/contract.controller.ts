@@ -6,12 +6,11 @@ import {
   Delete,
   Body,
   Param,
-  Query,
   ParseIntPipe,
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ContractService } from '../services/contract.service';
 import { Contract } from '../models/contract.model';
 import { CreateContractDto, UpdateContractDto } from '../dto';

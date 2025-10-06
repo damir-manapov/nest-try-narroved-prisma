@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ContractRepository } from '../repositories/contract.repository';
-import { Contract, CreateContractData, UpdateContractData } from '../models/contract.model';
+import { Contract } from '../models/contract.model';
 import { CreateContractDto, UpdateContractDto } from '../dto';
 import { ContractServiceMapper } from './mappers/contract-service.mapper';
 

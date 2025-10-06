@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserSettingsRepository } from '../repositories/user-settings.repository';
-import { UserSettings, CreateUserSettingsData, UpdateUserSettingsData } from '../models/user-settings.model';
+import { UserSettings } from '../models/user-settings.model';
 import { CreateUserSettingsDto, UpdateUserSettingsDto } from '../dto';
 import { UserSettingsServiceMapper } from './mappers/user-settings-service.mapper';
 
