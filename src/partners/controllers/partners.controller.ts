@@ -15,9 +15,9 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { PartnersService } from './partners.service';
-import { CreatePartnerDto } from './dto/create-partner.dto';
-import { UpdatePartnerDto } from './dto/update-partner.dto';
+import { PartnersService } from '../services/partners.service';
+import { CreatePartnerDto } from '../dto/create-partner.dto';
+import { UpdatePartnerDto } from '../dto/update-partner.dto';
 
 @ApiTags('Partners')
 @Controller('partners')

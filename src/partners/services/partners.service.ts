@@ -3,10 +3,10 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { Partner, CreatePartnerData, UpdatePartnerData } from './models/partner.model';
-import { CreatePartnerDto } from './dto/create-partner.dto';
-import { UpdatePartnerDto } from './dto/update-partner.dto';
-import { PartnersRepository } from './repositories/partners.repository';
+import { Partner, CreatePartnerData, UpdatePartnerData } from '../models/partner.model';
+import { CreatePartnerDto } from '../dto/create-partner.dto';
+import { UpdatePartnerDto } from '../dto/update-partner.dto';
+import { PartnersRepository } from '../repositories/partners.repository';
 
 @Injectable()
 export class PartnersService {
