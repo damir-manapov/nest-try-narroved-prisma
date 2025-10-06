@@ -2,23 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ContractRepository } from '../repositories/contract.repository';
 import { Contract, CreateContractData, UpdateContractData } from '../models/contract.model';
 import { CreateContractDto, UpdateContractDto } from '../dto';
+import { ContractServiceMapper } from './mappers/contract-service.mapper';
 
 @Injectable()
 export class ContractService {
   constructor(private readonly contractRepository: ContractRepository) {}
 
   async create(createContractDto: CreateContractDto): Promise<Contract> {
-    const createContractData: CreateContractData = {
-      partnerId: createContractDto.partnerId,
-      title: createContractDto.title,
-      description: createContractDto.description,
-      amount: createContractDto.amount,
-      currency: createContractDto.currency,
-      startDate: new Date(createContractDto.startDate),
-      endDate: createContractDto.endDate ? new Date(createContractDto.endDate) : undefined,
-      status: createContractDto.status,
-      isActive: createContractDto.isActive,
-    };
+    const createContractData = ContractServiceMapper.toCreateContractData(createContractDto);
     return this.contractRepository.create(createContractData);
   }
 
@@ -36,16 +27,7 @@ export class ContractService {
       throw new NotFoundException(`Contract with ID ${id} not found`);
     }
 
-    const updateContractData: UpdateContractData = {
-      title: updateContractDto.title,
-      description: updateContractDto.description,
-      amount: updateContractDto.amount,
-      currency: updateContractDto.currency,
-      startDate: updateContractDto.startDate ? new Date(updateContractDto.startDate) : undefined,
-      endDate: updateContractDto.endDate ? new Date(updateContractDto.endDate) : undefined,
-      status: updateContractDto.status,
-      isActive: updateContractDto.isActive,
-    };
+    const updateContractData = ContractServiceMapper.toUpdateContractData(updateContractDto);
     return this.contractRepository.update(id, updateContractData);
   }
 

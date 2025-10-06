@@ -7,6 +7,7 @@ import { User, CreateUserData, UpdateUserData } from '../models/user.model';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UsersRepository } from '../repositories/users.repository';
+import { UserServiceMapper } from './mappers/user-service.mapper';
 
 @Injectable()
 export class UsersService {
@@ -22,11 +23,7 @@ export class UsersService {
     }
 
     // Convert DTO to domain model
-    const createUserData: CreateUserData = {
-      email: createUserDto.email,
-      name: createUserDto.name,
-      isActive: createUserDto.isActive,
-    };
+    const createUserData = UserServiceMapper.toCreateUserData(createUserDto);
 
     return this.usersRepository.create(createUserData);
   }
@@ -63,11 +60,7 @@ export class UsersService {
     }
 
     // Convert DTO to domain model
-    const updateUserData: UpdateUserData = {
-      email: updateUserDto.email,
-      name: updateUserDto.name,
-      isActive: updateUserDto.isActive,
-    };
+    const updateUserData = UserServiceMapper.toUpdateUserData(updateUserDto);
 
     return this.usersRepository.update(id, updateUserData);
   }

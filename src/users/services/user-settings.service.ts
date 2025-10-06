@@ -2,20 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserSettingsRepository } from '../repositories/user-settings.repository';
 import { UserSettings, CreateUserSettingsData, UpdateUserSettingsData } from '../models/user-settings.model';
 import { CreateUserSettingsDto, UpdateUserSettingsDto } from '../dto';
+import { UserSettingsServiceMapper } from './mappers/user-settings-service.mapper';
 
 @Injectable()
 export class UserSettingsService {
   constructor(private readonly userSettingsRepository: UserSettingsRepository) {}
 
   async create(userId: number, createUserSettingsDto: CreateUserSettingsDto): Promise<UserSettings> {
-    const createUserSettingsData: CreateUserSettingsData = {
+    const createUserSettingsData = UserSettingsServiceMapper.toCreateUserSettingsData(
       userId,
-      theme: createUserSettingsDto.theme,
-      language: createUserSettingsDto.language,
-      timezone: createUserSettingsDto.timezone,
-      notifications: createUserSettingsDto.notifications,
-      emailNotifications: createUserSettingsDto.emailNotifications,
-    };
+      createUserSettingsDto,
+    );
     return this.userSettingsRepository.create(createUserSettingsData);
   }
 
@@ -29,13 +26,9 @@ export class UserSettingsService {
       throw new NotFoundException(`User settings not found for user ID ${userId}`);
     }
 
-    const updateUserSettingsData: UpdateUserSettingsData = {
-      theme: updateUserSettingsDto.theme,
-      language: updateUserSettingsDto.language,
-      timezone: updateUserSettingsDto.timezone,
-      notifications: updateUserSettingsDto.notifications,
-      emailNotifications: updateUserSettingsDto.emailNotifications,
-    };
+    const updateUserSettingsData = UserSettingsServiceMapper.toUpdateUserSettingsData(
+      updateUserSettingsDto,
+    );
     return this.userSettingsRepository.update(userId, updateUserSettingsData);
   }
 

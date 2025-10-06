@@ -7,6 +7,7 @@ import { Partner, CreatePartnerData, UpdatePartnerData } from '../models/partner
 import { CreatePartnerDto } from '../dto/create-partner.dto';
 import { UpdatePartnerDto } from '../dto/update-partner.dto';
 import { PartnersRepository } from '../repositories/partners.repository';
+import { PartnerServiceMapper } from './mappers/partner-service.mapper';
 
 @Injectable()
 export class PartnersService {
@@ -22,14 +23,7 @@ export class PartnersService {
     }
 
     // Convert DTO to domain model
-    const createPartnerData: CreatePartnerData = {
-      name: createPartnerDto.name,
-      email: createPartnerDto.email,
-      phone: createPartnerDto.phone,
-      website: createPartnerDto.website,
-      address: createPartnerDto.address,
-      isActive: createPartnerDto.isActive,
-    };
+    const createPartnerData = PartnerServiceMapper.toCreatePartnerData(createPartnerDto);
 
     return this.partnersRepository.create(createPartnerData);
   }
@@ -72,14 +66,7 @@ export class PartnersService {
     }
 
     // Convert DTO to domain model
-    const updatePartnerData: UpdatePartnerData = {
-      name: updatePartnerDto.name,
-      email: updatePartnerDto.email,
-      phone: updatePartnerDto.phone,
-      website: updatePartnerDto.website,
-      address: updatePartnerDto.address,
-      isActive: updatePartnerDto.isActive,
-    };
+    const updatePartnerData = PartnerServiceMapper.toUpdatePartnerData(updatePartnerDto);
 
     return this.partnersRepository.update(id, updatePartnerData);
   }
