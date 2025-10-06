@@ -1,6 +1,6 @@
-# NestJS TypeScript Project with Narroved Prisma
+# NestJS TypeScript Project with Domain-Driven Architecture
 
-A modern NestJS application built with TypeScript, featuring PostgreSQL database integration, repository pattern architecture, and comprehensive CRUD operations.
+A modern NestJS application built with TypeScript, featuring PostgreSQL database integration, domain-driven design architecture, comprehensive CRUD operations, and clean separation of concerns.
 
 ## 🚀 Features
 
@@ -9,11 +9,14 @@ A modern NestJS application built with TypeScript, featuring PostgreSQL database
 - **🗄️ PostgreSQL Database** - Robust relational database with Docker
 - **🔧 Prisma ORM** - Type-safe database access with migrations
 - **📖 Swagger Documentation** - Auto-generated API documentation
-- **🏛️ Repository Pattern** - Clean architecture with narrow Prisma services
+- **🏛️ Domain-Driven Design** - Clean architecture with domain models and mappers
+- **🔒 Narrow Prisma Services** - Entity-specific database access with type safety
+- **📊 Statistics Endpoints** - Built-in analytics for all entities
 - **🧪 Comprehensive Testing** - Unit tests and end-to-end tests
-- **🐳 Docker Support** - Containerized PostgreSQL database
+- **🐳 Docker Support** - Containerized PostgreSQL database with pgAdmin
 - **📐 Clean Code** - ESLint, Prettier, and consistent formatting
 - **⚡ Hot Reload** - Development with automatic code reload
+- **🌍 Environment Configuration** - Flexible port and database configuration
 
 ## 📋 Prerequisites
 
@@ -62,16 +65,16 @@ yarn start:dev
 ```
 
 ### **Access the Application:**
-- **API**: http://localhost:3000/api/v1
+- **API**: http://localhost:3000/api/v1 (or custom PORT from environment)
 - **Swagger Documentation**: http://localhost:3000/api
 - **Health Check**: http://localhost:3000/api/v1/app/health
 
 ### **Database Management:**
 - **PgAdmin**: http://localhost:5050 
-  - 🔐 **Login**: admin@example.com / admin123
+  - 🔐 **Login**: pgadmin@example.com / admin123
   - 🛡️ **Master Password**: pgAdminMaster2025! (required for server password retrieval)
   - 🔗 **Pre-configured**: "NestJS Database" server automatically connected
-  - 📊 **Database**: `postgres` with `users` and `partners` tables
+  - 📊 **Database**: `postgres` with all tables
 - **Prisma Studio**: `yarn db:studio`
 - **Docker Compose**: All compose files are in `compose/` directory
 
@@ -88,26 +91,55 @@ src/
 ├── app.controller.ts          # Health check endpoints
 ├── app.service.ts             # Application service
 ├── users/                    # User management module
-│   ├── users.controller.ts   # User REST endpoints
-│   ├── users.service.ts      # User business logic
-│   ├── users.module.ts       # User module configuration
+│   ├── controllers/          # REST API controllers
+│   │   ├── users.controller.ts
+│   │   └── user-settings.controller.ts
+│   ├── services/             # Business logic layer
+│   │   ├── users.service.ts
+│   │   └── user-settings.service.ts
 │   ├── repositories/         # Data access layer
-│   │   └── users.repository.ts
-│   └── dto/                  # Data Transfer Objects
-│       ├── create-user.dto.ts
-│       └── update-user.dto.ts
+│   │   ├── users.repository.ts
+│   │   ├── user-settings.repository.ts
+│   │   ├── user.mapper.ts
+│   │   └── user-settings.mapper.ts
+│   ├── models/               # Domain models
+│   │   ├── user.model.ts
+│   │   └── user-settings.model.ts
+│   ├── dto/                  # Data Transfer Objects
+│   │   ├── create-user.dto.ts
+│   │   ├── update-user.dto.ts
+│   │   ├── create-user-settings.dto.ts
+│   │   ├── update-user-settings.dto.ts
+│   │   └── index.ts
+│   ├── externalServices/      # External service dependencies
+│   │   └── prisma-user.service.ts
+│   ├── users.module.ts       # Module configuration
+│   └── index.ts              # Module exports
 ├── partners/                 # Partner management module
-│   ├── partners.controller.ts # Partner REST endpoints
-│   ├── partners.service.ts   # Partner business logic
-│   ├── partners.module.ts    # Partner module configuration
+│   ├── controllers/          # REST API controllers
+│   │   ├── partners.controller.ts
+│   │   └── contract.controller.ts
+│   ├── services/             # Business logic layer
+│   │   ├── partners.service.ts
+│   │   └── contract.service.ts
 │   ├── repositories/         # Data access layer
-│   │   └── partners.repository.ts
-│   └── dto/                  # Data Transfer Objects
-│       ├── create-partner.dto.ts
-│       └── update-partner.dto.ts
-├── prisma/                   # Database services
-│   ├── prisma-user.service.ts    # Narrow User DB service
-│   └── prisma-partner.service.ts # Narrow Partner DB service
+│   │   ├── partners.repository.ts
+│   │   ├── contract.repository.ts
+│   │   ├── partner.mapper.ts
+│   │   └── contract.mapper.ts
+│   ├── models/               # Domain models
+│   │   ├── partner.model.ts
+│   │   └── contract.model.ts
+│   ├── dto/                  # Data Transfer Objects
+│   │   ├── create-partner.dto.ts
+│   │   ├── update-partner.dto.ts
+│   │   ├── create-contract.dto.ts
+│   │   ├── update-contract.dto.ts
+│   │   └── index.ts
+│   ├── externalServices/      # External service dependencies
+│   │   └── prisma-partner.service.ts
+│   ├── partners.module.ts    # Module configuration
+│   └── index.ts              # Module exports
 └── test/                     # End-to-end tests
     └── app.e2e-spec.ts
 ```
@@ -120,6 +152,19 @@ src/
 - email: String (Unique)
 - name: String
 - isActive: Boolean (Default: true)
+- createdAt: DateTime (Auto-generated)
+- updatedAt: DateTime (Auto-updated)
+```
+
+### **UserSettings Table:**
+```sql
+- id: Int (Primary Key, Auto-increment)
+- userId: Int (Foreign Key, Unique)
+- theme: String (Default: "light")
+- language: String (Default: "en")
+- timezone: String (Default: "UTC")
+- notifications: Boolean (Default: true)
+- emailNotifications: Boolean (Default: true)
 - createdAt: DateTime (Auto-generated)
 - updatedAt: DateTime (Auto-updated)
 ```
@@ -137,6 +182,22 @@ src/
 - updatedAt: DateTime (Auto-updated)
 ```
 
+### **Contracts Table:**
+```sql
+- id: Int (Primary Key, Auto-increment)
+- partnerId: Int (Foreign Key)
+- title: String
+- description: String? (Optional)
+- amount: Decimal? (Optional, 10,2 precision)
+- currency: String (Default: "USD")
+- startDate: DateTime
+- endDate: DateTime? (Optional)
+- status: String (Default: "active")
+- isActive: Boolean (Default: true)
+- createdAt: DateTime (Auto-generated)
+- updatedAt: DateTime (Auto-updated)
+```
+
 ## 🔌 API Endpoints
 
 ### **Health & Status:**
@@ -144,22 +205,40 @@ src/
 - `GET /api/v1/app/health` - Health check with timestamp
 
 ### **Users:**
-- `GET /api/v1/users` - List all active users
+- `GET /api/v1/users` - List all users
 - `POST /api/v1/users` - Create a new user
 - `GET /api/v1/users/:id` - Get user by ID
 - `PATCH /api/v1/users/:id` - Update user
-- `DELETE /api/v1/users/:id` - Soft delete user
+- `DELETE /api/v1/users/:id` - Delete user
 - `GET /api/v1/users/email/:email` - Find user by email
 - `GET /api/v1/users/stats` - Get user statistics
 
+### **User Settings:**
+- `GET /api/v1/user-settings` - List all user settings
+- `POST /api/v1/user-settings/:userId` - Create user settings
+- `GET /api/v1/user-settings/user/:userId` - Get user settings by user ID
+- `PUT /api/v1/user-settings/user/:userId` - Update user settings
+- `DELETE /api/v1/user-settings/user/:userId` - Delete user settings
+- `GET /api/v1/user-settings/stats` - Get user settings statistics
+
 ### **Partners:**
-- `GET /api/v1/partners` - List all active partners
+- `GET /api/v1/partners` - List all partners
 - `POST /api/v1/partners` - Create a new partner
 - `GET /api/v1/partners/:id` - Get partner by ID
 - `PATCH /api/v1/partners/:id` - Update partner
-- `DELETE /api/v1/partners/:id` - Soft delete partner
+- `DELETE /api/v1/partners/:id` - Delete partner
 - `GET /api/v1/partners/email/:email` - Find partner by email
 - `GET /api/v1/partners/stats` - Get partner statistics
+
+### **Contracts:**
+- `GET /api/v1/contracts` - List all contracts
+- `POST /api/v1/contracts` - Create a new contract
+- `GET /api/v1/contracts/:id` - Get contract by ID
+- `PUT /api/v1/contracts/:id` - Update contract
+- `DELETE /api/v1/contracts/:id` - Delete contract
+- `GET /api/v1/contracts/partner/:partnerId` - Get contracts by partner
+- `GET /api/v1/contracts/status/:status` - Get contracts by status
+- `GET /api/v1/contracts/stats` - Get contract statistics
 
 ## 🛠️ Available Scripts
 
@@ -193,20 +272,38 @@ src/
 
 ## 🏗️ Architecture Patterns
 
-### **Repository Pattern:**
-- **Separation of Concerns**: Business logic separated from data access
-- **Testability**: Easy mocking of data access layer
-- **Flexibility**: Can swap database implementations
+### **Domain-Driven Design (DDD):**
+- **Domain Models**: Pure business entities separate from database concerns
+- **Mappers**: Clean conversion between domain models and Prisma entities
+- **Repository Pattern**: Data access abstraction with domain model interfaces
+- **Service Layer**: Business logic orchestration using domain models
 
 ### **Narrow Prisma Services:**
-- **Entity Isolation**: Each repository only access its specific entities
+- **Entity Isolation**: Each service only accesses its specific entities
 - **Type Safety**: Compile-time prevention of cross-entity access
-- **Clean Boundaries**: Strict domain separation
+- **Clean Boundaries**: Strict domain separation with restricted interfaces
+- **Transaction Safety**: Type-safe transactions within entity boundaries
 
 ### **Module-Based Structure:**
-- **Domain-Driven Design**: Each feature is self-contained
-- **Scalability**: Easy to add new features
-- **Maintainability**: Clear responsibilities per module
+- **Feature Modules**: Self-contained modules with clear boundaries
+- **External Services**: Module-specific external dependencies
+- **Clean Exports**: Only services exposed as public API
+- **Co-location**: Related code grouped together for maintainability
+
+### **Layered Architecture:**
+```
+┌─────────────────────────────────────┐
+│           Controllers               │ ← REST API Layer
+├─────────────────────────────────────┤
+│            Services                 │ ← Business Logic Layer
+├─────────────────────────────────────┤
+│          Repositories               │ ← Data Access Layer
+├─────────────────────────────────────┤
+│           Mappers                  │ ← Data Transformation Layer
+├─────────────────────────────────────┤
+│        External Services            │ ← Database Access Layer
+└─────────────────────────────────────┘
+```
 
 ## 🧪 Testing
 
@@ -244,7 +341,7 @@ NODE_ENV=development
 PORT=3000
 
 # Database
-DATABASE_URL="postgresql://nest_user:nest_password@localhost:5432/nest_try_narroved_prisma?schema=public"
+DATABASE_URL="postgresql://nest_user:nest_password@localhost:5432/postgres?schema=public"
 
 # CORS
 CORS_ORIGIN=http://localhost:3000
@@ -285,6 +382,32 @@ This validates:
 - ✅ Build process
 - ✅ Project structure
 
+## 🎯 Key Architectural Benefits
+
+### **Type Safety:**
+- Full TypeScript coverage with strict typing
+- Prisma-generated types for database operations
+- Domain model interfaces for business logic
+- Compile-time error prevention
+
+### **Maintainability:**
+- Clear separation of concerns
+- Domain-driven design principles
+- Module-based organization
+- Consistent naming conventions
+
+### **Testability:**
+- Dependency injection for easy mocking
+- Repository pattern for data layer testing
+- Service layer isolation
+- Clear interfaces for unit testing
+
+### **Scalability:**
+- Modular architecture for easy feature addition
+- Narrow services prevent coupling
+- Clean module boundaries
+- Extensible design patterns
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -308,6 +431,8 @@ This project is licensed under the UNLICENSED License.
 - **GraphQL**: Add GraphQL API support
 - **Caching**: Implement Redis caching
 - **Monitoring**: Add application monitoring
+- **Event Sourcing**: Implement domain events
+- **CQRS**: Add Command Query Responsibility Segregation
 
 ## 📚 Documentation
 
@@ -315,6 +440,7 @@ This project is licensed under the UNLICENSED License.
 - **Prisma Documentation**: https://www.prisma.io/docs
 - **Swagger/OpenAPI**: Accessible at `/api` when running
 - **TypeScript**: https://www.typescriptlang.org/docs/
+- **Domain-Driven Design**: https://martinfowler.com/bliki/DomainDrivenDesign.html
 
 ---
 
