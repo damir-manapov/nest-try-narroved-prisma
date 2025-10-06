@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaPartnerService } from '../../prisma/prisma-partner.service';
+import { PrismaPartnerService } from '../externalServices/prisma-partner.service';
 import { Contract, CreateContractData, UpdateContractData } from '../models/contract.model';
 import { ContractMapper } from './contract.mapper';
 
